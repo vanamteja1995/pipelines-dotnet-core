@@ -15,3 +15,17 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(2)(5c91123c-a673-4557-8f9c-185b6c21b9ec)'
+    appType: 'webAppLinux'
+    WebAppName: 'simplewebapp1'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
